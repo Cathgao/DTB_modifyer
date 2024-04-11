@@ -1,7 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -20,6 +19,36 @@ MainWindow::~MainWindow()
   delete ui;
 }
 
+void MainWindow::Read_opp_list(QByteArray data)
+{
+  int index = 0;
+  QByteArray pointdata;
+  while ((index = data.indexOf("opp-", index)) != -1)
+    {
+      pointdata = data.mid(index,60);
+
+      //增加频率标签
+      label[opp_index] = new QLabel(ui->centralwidget);
+      label[opp_index]->setText(pointdata.mid(4,9));
+      ui->verticalLayout_freq->addWidget(label[opp_index]);
+
+      //增加16进制电压输入
+      lineedit_vol_hex[opp_index] = new QLineEdit(ui->centralwidget);
+      lineedit_vol_hex[opp_index]->setText(pointdata.mid(50,2).toHex());
+      ui->verticalLayout_vol_hex->addWidget(lineedit_vol_hex[opp_index]);
+      //增加10进制电压输入
+      lineedit_vol_dec[opp_index] = new QLineEdit(ui->centralwidget);
+      lineedit_vol_dec[opp_index]->setText(QString::number(pointdata.mid(50,2).toHex().toInt(nullptr, 16)));
+      qDebug()<<pointdata.mid(50,2).toHex().toInt(nullptr, 16);
+      ui->verticalLayout_vol_dec->addWidget(lineedit_vol_dec[opp_index]);
+
+//      connect(lineedit_vol_hex[opp_index],&QLineEdit::textChanged,this,lineedit_vol_dec[opp_index]);
+      index++;
+      opp_index++;
+    }
+
+}
+
 void MainWindow::Readfile()
 {
   QFile file(file_path);
@@ -30,7 +59,9 @@ void MainWindow::Readfile()
       if(!readdata.contains("gpu-opp-table_v2"))
         {
           QMessageBox::critical(this,"错误","文件无效");
+          return;
         }
+      ui->pushButton_open->setEnabled(0);
       QList<QByteArray> opplist;
       QList<uchar> opplist_index;
       QList<uchar> opplist_voltage;
@@ -42,15 +73,13 @@ void MainWindow::Readfile()
               qDebug() << "Found gpu-opp-table_v2 at index position " << index;
               qDebug() << "Found psci at index position " << readdata.indexOf("psci",index + 73);
               opplist_index.append(index + 72);//到这里是真正频率点
-              opplist.append(readdata.mid(index + 72,readdata.indexOf("psci",index + 73)- index - 72));
-//              QLabel *label = new QLabel(ui->centralwidget);
-//              ui->verticalLayout_freq->addWidget(label);
-//              label->setText("111111");
+              opplist.append(readdata.mid(index + 72,readdata.indexOf("psci",index + 73)- index - 72)); //读取opp-<freq>到psci前的字节
             }
           ++index;
         }
       for(uint8_t i = 0;i<opplist.size();i++)
         {
+          Read_opp_list(opplist[i]);
           ui->textBrowser->insertPlainText(opplist[i].toHex());
           ui->textBrowser->insertPlainText("\n");
         }
@@ -64,14 +93,18 @@ void MainWindow::on_pushButton_clicked()
 
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-
-  Readfile();
-}
-
 void MainWindow::on_pushButton_3_clicked()
 {
   file_path = QFileDialog::getOpenFileName(this);
   ui->lineEdit_path->setText(file_path);
+}
+
+void MainWindow::on_pushButton_open_clicked()
+{
+      Readfile();
+}
+
+void MainWindow::on_lineEdit_path_textChanged(const QString &arg1)
+{
+
 }

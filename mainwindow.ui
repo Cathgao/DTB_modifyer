@@ -30,7 +30,7 @@
          <widget class="QLineEdit" name="lineEdit_path"/>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="pushButton_open">
           <property name="text">
            <string>打开</string>
           </property>
@@ -84,38 +84,40 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>频率电压表：</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>频率：(HZ)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>电压：(Hex)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>电压：(Dec)</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_freq">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QVBoxLayout" name="verticalLayout_freq"/>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_vol_hex">
-          <item>
-           <widget class="QLineEdit" name="lineEdit"/>
-          </item>
-         </layout>
+         <layout class="QVBoxLayout" name="verticalLayout_vol_hex"/>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_vol_dec">
-          <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
-          </item>
-         </layout>
+         <layout class="QVBoxLayout" name="verticalLayout_vol_dec"/>
         </item>
        </layout>
       </item>
@@ -145,9 +147,9 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButton_write">
           <property name="text">
-           <string>PushButton</string>
+           <string>写入</string>
           </property>
          </widget>
         </item>
