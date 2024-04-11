@@ -31,7 +31,7 @@ private slots:
 
   void on_pushButton_open_clicked();
 
-  void on_lineEdit_path_textChanged(const QString &arg1);
+  void on_vol_edited();
 
 private:
   Ui::MainWindow *ui;

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QRegExpValidator>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -35,14 +36,19 @@ void MainWindow::Read_opp_list(QByteArray data)
       //增加16进制电压输入
       lineedit_vol_hex[opp_index] = new QLineEdit(ui->centralwidget);
       lineedit_vol_hex[opp_index]->setText(pointdata.mid(50,2).toHex());
+      lineedit_vol_hex[opp_index]->setObjectName("lineedit_vol_hex_" + QString::number(opp_index));
+      lineedit_vol_hex[opp_index]->setValidator(new QRegularExpressionValidator(QRegularExpression("^[0-9a-f]+$")));
       ui->verticalLayout_vol_hex->addWidget(lineedit_vol_hex[opp_index]);
       //增加10进制电压输入
       lineedit_vol_dec[opp_index] = new QLineEdit(ui->centralwidget);
       lineedit_vol_dec[opp_index]->setText(QString::number(pointdata.mid(50,2).toHex().toInt(nullptr, 16)));
+      lineedit_vol_dec[opp_index]->setObjectName("lineedit_vol_dec_" + QString::number(opp_index));
       qDebug()<<pointdata.mid(50,2).toHex().toInt(nullptr, 16);
       ui->verticalLayout_vol_dec->addWidget(lineedit_vol_dec[opp_index]);
 
-//      connect(lineedit_vol_hex[opp_index],&QLineEdit::textChanged,this,lineedit_vol_dec[opp_index]);
+      connect(lineedit_vol_hex[opp_index],&QLineEdit::textChanged,this,&MainWindow::on_vol_edited);
+      connect(lineedit_vol_dec[opp_index],&QLineEdit::textChanged,this,&MainWindow::on_vol_edited);
+
       index++;
       opp_index++;
     }
@@ -104,7 +110,24 @@ void MainWindow::on_pushButton_open_clicked()
       Readfile();
 }
 
-void MainWindow::on_lineEdit_path_textChanged(const QString &arg1)
+void MainWindow::on_vol_edited()
 {
+  QLineEdit *lineedit = qobject_cast<QLineEdit*>(sender());
+  QString text = lineedit->text();
+  QString name = sender()->objectName();
+  qDebug()<<"text:"<<text;
+  qDebug()<<"objectName:"<<name<<"\n";
+  QStringList tmp = name.split("_");
+  int index = tmp.last().toUInt();
+  if(name.startsWith("lineedit_vol_hex"))
+    {
+      qDebug()<<"hex:" + text<<"dec:"<<text.toUInt(nullptr,16);
+      lineedit_vol_dec[index]->setText(QString::number(text.toUInt(nullptr,16)));
+    }
+  else if(name.startsWith("lineedit_vol_dec"))
+    {
+      qDebug()<<"dec:" + text<<"hex:"<<QString::number(text.toInt(),16).toUpper().rightJustified(4, '0');
+      lineedit_vol_hex[index]->setText(QString::number(text.toInt(),16).toUpper().rightJustified(4, '0'));
+    }
 
 }
