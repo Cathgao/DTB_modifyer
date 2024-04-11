@@ -43,7 +43,7 @@ void MainWindow::Read_opp_list(QByteArray data)
       lineedit_vol_dec[opp_index] = new QLineEdit(ui->centralwidget);
       lineedit_vol_dec[opp_index]->setText(QString::number(pointdata.mid(50,2).toHex().toInt(nullptr, 16)));
       lineedit_vol_dec[opp_index]->setObjectName("lineedit_vol_dec_" + QString::number(opp_index));
-      lineedit_vol_hex[opp_index]->setValidator(new QRegularExpressionValidator(QRegularExpression("^[0-9]+$")));
+      lineedit_vol_dec[opp_index]->setValidator(new QRegularExpressionValidator(QRegularExpression("^[0-9]+$")));
       qDebug()<<pointdata.mid(50,2).toHex().toInt(nullptr, 16);
       ui->verticalLayout_vol_dec->addWidget(lineedit_vol_dec[opp_index]);
 
