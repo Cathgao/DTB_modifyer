@@ -9,7 +9,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-  file_path = "R:\\dtb";
   ui->setupUi(this);
 }
 
@@ -90,6 +89,7 @@ void MainWindow::on_pushButton_3_clicked()
 {
   file_path = QFileDialog::getOpenFileName(this);
   ui->lineEdit_path->setText(file_path);
+  ui->pushButton_open->setEnabled(1);
 }
 
 void MainWindow::on_pushButton_open_clicked()
