@@ -37,5 +37,7 @@ private:
   Ui::MainWindow *ui;
   QString file_path;
   uint16_t file_size;
+  QList<QByteArray> opplist;
+  QList<uchar> opplist_index;
 };
 #endif // MAINWINDOW_H

@@ -71,9 +71,6 @@ void MainWindow::Readfile()
           return;
         }
       ui->pushButton_open->setEnabled(0);
-      QList<QByteArray> opplist;
-      QList<uchar> opplist_index;
-      QList<uchar> opplist_voltage;
       int index=0;
       while ((index = readdata.indexOf("gpu-opp-table_v2", index)) != -1)
         {
