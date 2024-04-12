@@ -3,7 +3,11 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QRegularExpressionValidator>
+#else
 #include <QRegExpValidator>
+#endif
 #include <QFileInfo>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -95,16 +99,21 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_open_clicked()
 {
   QFile file(file_path);
-  if (file.open(QIODevice::ReadWrite))
+  if (file.open(QIODevice::ReadOnly))
   {
     ui->label_filesize->setText(QString::number(file.size()));
     file_data = file.readAll();
     file.close();
-    if (!file_data.contains("gpu-opp-table_v2"))
+    if ((!file_data.contains("gpu-opp-table_v2")) || (file_data.contains("This program")))
     {
       QMessageBox::critical(this, "错误", "文件无效");
       return;
     }
+  }
+  else
+  {
+    QMessageBox::critical(this, "错误", "文件打开失败");
+    return;
   }
   ui->pushButton_open->setEnabled(0);
   ui->pushButton_write->setEnabled(1);
