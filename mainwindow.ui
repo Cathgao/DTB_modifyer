@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
+    <width>501</width>
     <height>242</height>
    </rect>
   </property>
@@ -148,6 +148,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_write">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>写入</string>
           </property>

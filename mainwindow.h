@@ -7,7 +7,10 @@
 #include <QLineEdit>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+  class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -33,11 +36,15 @@ private slots:
 
   void on_vol_edited();
 
+  void on_pushButton_write_clicked();
+
 private:
   Ui::MainWindow *ui;
+  QByteArray file_data;
   QString file_path;
   uint16_t file_size;
-  QList<QByteArray> opplist;
-  QList<uchar> opplist_index;
+  QList<QByteArray> oppdata;           // 保存频率表的二进制块
+  QList<uint32_t> opplist_index;       // 保存频率表二进制块的地址
+  QList<QList<uint16_t>> voltage_list; // 保存提取的16bit电压表
 };
 #endif // MAINWINDOW_H
