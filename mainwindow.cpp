@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
   file_path = "R:\\dtb";
   ui->setupUi(this);
-
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +31,7 @@ void MainWindow::Read_opp_list(QByteArray data)
       label[opp_index] = new QLabel(ui->centralwidget);
       label[opp_index]->setText(pointdata.mid(4,9));
       ui->verticalLayout_freq->addWidget(label[opp_index]);
+      ui->textBrowser->insertPlainText(pointdata.mid(4,9) + " ");
 
       //增加16进制电压输入
       lineedit_vol_hex[opp_index] = new QLineEdit(ui->centralwidget);
@@ -39,6 +39,8 @@ void MainWindow::Read_opp_list(QByteArray data)
       lineedit_vol_hex[opp_index]->setObjectName("lineedit_vol_hex_" + QString::number(opp_index));
       lineedit_vol_hex[opp_index]->setValidator(new QRegularExpressionValidator(QRegularExpression("^[0-9a-f]+$")));
       ui->verticalLayout_vol_hex->addWidget(lineedit_vol_hex[opp_index]);
+      ui->textBrowser->insertPlainText("0x" + pointdata.mid(50,2).toHex() + "\n");
+
       //增加10进制电压输入
       lineedit_vol_dec[opp_index] = new QLineEdit(ui->centralwidget);
       lineedit_vol_dec[opp_index]->setText(QString::number(pointdata.mid(50,2).toHex().toInt(nullptr, 16)));
@@ -81,16 +83,15 @@ void MainWindow::Readfile()
               qDebug() << "Found psci at index position " << readdata.indexOf("psci",index + 73);
               opplist_index.append(index + 72);//到这里是真正频率点
               opplist.append(readdata.mid(index + 72,readdata.indexOf("psci",index + 73)- index - 72)); //读取opp-<freq>到psci前的字节
+
+              ui->textBrowser->insertPlainText("list found in addr 0x" + QString::number(index +72 , 16) + "\n");
             }
           ++index;
         }
       for(uint8_t i = 0;i<opplist.size();i++)
         {
           Read_opp_list(opplist[i]);
-          ui->textBrowser->insertPlainText(opplist[i].toHex());
-          ui->textBrowser->insertPlainText("\n");
         }
-//      qDebug()<<opplist;
     }
 }
 
@@ -127,8 +128,8 @@ void MainWindow::on_vol_edited()
     }
   else if(name.startsWith("lineedit_vol_dec"))
     {
-      qDebug()<<"dec:" + text<<"hex:"<<QString::number(text.toInt(),16).toUpper().rightJustified(4, '0');
-      lineedit_vol_hex[index]->setText(QString::number(text.toInt(),16).toUpper().rightJustified(4, '0'));
+      qDebug()<<"dec:" + text<<"hex:"<<QString::number(text.toInt(),16).toLower().rightJustified(4, '0');
+      lineedit_vol_hex[index]->setText(QString::number(text.toInt(),16).toLower().rightJustified(4, '0'));
     }
 
 }
