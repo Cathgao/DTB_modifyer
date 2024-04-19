@@ -168,7 +168,7 @@ void MainWindow::on_pushButton_write_clicked()
   // 全部电压表更新完成，文件块写入到新文件中
   QFileInfo fileinfo(file_path);
   QString path = fileinfo.path();
-  QFile newfile(path + "dtb_new");
+  QFile newfile(path + "/dtb_new");
   if (newfile.open(QIODevice::WriteOnly))
   {
     newfile.write(file_data);
